@@ -22,7 +22,7 @@ TP1-FTELMarket/
 ├── Controllers/
 │   └── ProductsController.cs
 │
-├── Data/
+├── DATA/
 │   ├── AppDbContext.cs
 │   └── DbInitializer.cs
 │
