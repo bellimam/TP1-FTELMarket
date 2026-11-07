@@ -36,7 +36,7 @@ dotnet restore
 ### 3. Démarrer SQL Server avec Docker
 
 ```powershell
-docker run -d --name ftelmarket-sql -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=VOTRE_MOT_DE_PASSE_FORT" -p 1433:1433 -v ftelmarket-data:/var/opt/mssql mcr.microsoft.com/mssql/server:2022-latest
+docker run -d --name ftelmarket-sql -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=FtElMarket!2026Sql" -p 1433:1433 -v ftelmarket-data:/var/opt/mssql mcr.microsoft.com/mssql/server:2022-latest
 ```
 
 Remplacer `VOTRE_MOT_DE_PASSE_FORT` par un mot de passe personnel robuste.
