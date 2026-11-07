@@ -24,7 +24,7 @@ Chaque produit appartient à une catégorie et est associé à un utilisateur.
 
 ```powershell
 git clone https://github.com/bellimam/TP1-FTELMarket.git
-cd TP1-FTELMarket
+cd TP1-FTELMarket-main
 ```
 
 ### 2. Restaurer les dépendances
@@ -38,8 +38,6 @@ dotnet restore
 ```powershell
 docker run -d --name ftelmarket-sql -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=FtElMarket!2026Sql" -p 1433:1433 -v ftelmarket-data:/var/opt/mssql mcr.microsoft.com/mssql/server:2022-latest
 ```
-
-Remplacer `VOTRE_MOT_DE_PASSE_FORT` par un mot de passe personnel robuste.
 
 ### 4. Configurer la connexion à SQL Server
 
