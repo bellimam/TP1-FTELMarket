@@ -2,10 +2,9 @@
 using FTELMarket.API.Data;
 using Microsoft.EntityFrameworkCore;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Services
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
@@ -14,7 +13,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Configuration CORS pour autoriser le frontend
+// Configuration CORS pour le frontend
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontendPolicy", policy =>
@@ -26,14 +25,20 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
 // Initialisation de la base de données
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    // Créer la base et appliquer les migrations
+    context.Database.Migrate();
+
+    // Insérer les données initiales
     DbInitializer.Initialize(context);
 }
 
-// Configure the HTTP request pipeline.
+// Configuration du pipeline HTTP
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
