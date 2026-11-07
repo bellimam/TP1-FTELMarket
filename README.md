@@ -46,7 +46,7 @@ Remplacer `VOTRE_MOT_DE_PASSE_FORT` par un mot de passe personnel robuste.
 Dans PowerShell, définir la variable d'environnement :
 
 ```powershell
-$env:ConnectionStrings__DefaultConnection = "Server=localhost,1433;Database=FTELMarketDB;User Id=sa;Password=VOTRE_MOT_DE_PASSE_FORT;Encrypt=True;TrustServerCertificate=True"
+$env:ConnectionStrings__DefaultConnection = "Server=localhost,1433;Database=FTELMarketDB;User Id=sa;Password=FtElMarket!2026Sql;Encrypt=True;TrustServerCertificate=True"
 ```
 
 Utiliser le même mot de passe que celui défini lors de la création du conteneur SQL Server.
