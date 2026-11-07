@@ -1,108 +1,82 @@
-# TP1 – FTELMarket API
+# TP1 .NET : Installation et CRUD
 
-## Présentation
+API REST **FTELMarket** pour la gestion d'un catalogue de produits. Chaque produit appartient à une catégorie et est associé à un utilisateur. Projet réalisé avec ASP.NET Core Web API, Entity Framework Core (Code First) et SQL Server.
 
-Ce projet consiste à développer une API REST pour la gestion d'un catalogue de produits dans le cadre du TP1 – Installation et CRUD.
+## Technologies
 
-L'API permet de consulter, créer, modifier et supprimer des produits. Les données sont persistées dans une base de données SQL Server à l'aide d'Entity Framework Core.
+- .NET 10 / ASP.NET Core Web API
+- Entity Framework Core 10 (SQL Server)
+- SQL Server 2022
+- Docker
 
-## Technologies utilisées
+## Lancer le projet
 
-- C#
-- ASP.NET Core Web API (.NET 10)
-- Entity Framework Core 10
-- SQL Server
-- Docker (pour l'environnement de base de données)
+1. Cloner le dépôt :
 
-## Architecture du projet
+   ```bash
+   git clone https://github.com/bellimam/TP1-FTELMarket.git
+   cd TP1-FTELMarket
+   ```
+
+2. Restaurer les dépendances :
+
+   ```bash
+   dotnet restore
+   ```
+
+3. Démarrer SQL Server avec Docker :
+
+   ```bash
+   docker run -d --name ftelmarket-sql \
+   -e "ACCEPT_EULA=Y" \
+   -e "MSSQL_SA_PASSWORD=YourStrong!Passw0rd" \
+   -p 1433:1433 \
+   -v ftelmarket-data:/var/opt/mssql \
+   mcr.microsoft.com/mssql/server:2022-latest
+   ```
+
+   Remplacer le mot de passe par celui choisi localement.
+
+4. Configurer la chaîne de connexion `DefaultConnection` avec les identifiants du serveur SQL Server.
+
+5. Appliquer les migrations :
+
+   ```bash
+   dotnet ef database update
+   ```
+
+6. Lancer l'API :
+
+   ```bash
+   dotnet run
+   ```
+
+## Routes
+
+| Méthode | URL | Description |
+|---|---|---|
+| GET | `/api/products` | Liste des produits |
+| POST | `/api/products` | Ajouter un produit |
+| PUT | `/api/products/{id}` | Modifier un produit |
+| DELETE | `/api/products/{id}` | Supprimer un produit |
+| GET | `/api/categories` | Liste des catégories |
+
+## Structure
 
 ```text
-TP1-FTELMarket/
-│
-├── Controllers/
-│   └── ProductsController.cs
-│
-├── DATA/
-│   ├── AppDbContext.cs
-│   └── DbInitializer.cs
-│
-├── Migrations/
-│   ├── InitialCreate.cs
-│   ├── InitialCreate.Designer.cs
-│   └── AppDbContextModelSnapshot.cs
-│
-├── Models/
-│   ├── Product.cs
-│   ├── Category.cs
-│   └── User.cs
-│
-├── Properties/
-│   └── launchSettings.json
-│
-├── Program.cs
-├── FTELMarket.API.csproj
-├── appsettings.json
-└── README.md
+Controllers/   ProductsController
+DATA/          AppDbContext et DbInitializer
+Models/        Product, Category et User
+Migrations/    Migrations Entity Framework Core
+Properties/    Configuration de lancement
+Program.cs     Configuration et démarrage de l'API
 ```
 
-## Fonctionnalités
+## Choix techniques
 
-### Gestion des produits
-
-- **GET** : consulter le catalogue des produits.
-- **GET** : consulter les catégories.
-- **POST** : ajouter un nouveau produit.
-- **PUT** : modifier un produit existant.
-- **DELETE** : supprimer un produit.
-
-### Modèle de données
-
-- Un utilisateur peut posséder plusieurs produits.
-- Chaque produit appartient à une catégorie.
-- Chaque produit possède un nom, une description facultative, un prix, un stock et une date de création.
-
-## Prérequis
-
-- .NET 10 SDK
-- SQL Server
-- Visual Studio ou Visual Studio Code
-- Entity Framework Core CLI
-
-## Installation et lancement
-
-### 1. Cloner le dépôt
-
-```bash
-git clone https://github.com/bellimam/TP1-FTELMarket.git
-cd TP1-FTELMarket
-```
-
-### 2. Restaurer les dépendances
-
-```bash
-dotnet restore
-```
-
-### 3. Configurer la connexion à SQL Server
-
-Configurer la chaîne de connexion `DefaultConnection` dans `appsettings.json`, en fonction de l'environnement SQL Server utilisé.
-
-Ne pas publier de mot de passe ou d'information sensible dans le dépôt.
-
-### 4. Appliquer les migrations
-
-```bash
-dotnet ef database update
-```
-
-### 5. Lancer l'API
-
-```bash
-dotnet run
-```
-
-L'API est alors accessible à l'adresse indiquée dans la console.
-
-## Auteur
-
-Projet réalisé dans le cadre du TP1 – Installation et CRUD.
+- Entity Framework Core avec l'approche Code First et les migrations.
+- Relation 1-N entre User et Product.
+- Relation 1-N entre Category et Product.
+- Prix stocké en `decimal(18,2)` pour garantir la précision des valeurs monétaires.
+- Date de création définie en UTC côté serveur.
+- Données initiales des catégories et d'un utilisateur de démonstration.
