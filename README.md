@@ -1,82 +1,105 @@
-# TP1 .NET : Installation et CRUD
+# TP1 – FTELMarket
 
-API REST **FTELMarket** pour la gestion d'un catalogue de produits. Chaque produit appartient à une catégorie et est associé à un utilisateur. Projet réalisé avec ASP.NET Core Web API, Entity Framework Core (Code First) et SQL Server.
+API REST de gestion d'un catalogue de produits développée avec ASP.NET Core Web API, Entity Framework Core et SQL Server.
 
-## Technologies
+Chaque produit appartient à une catégorie et est associé à un utilisateur.
+
+## Technologies utilisées
 
 - .NET 10 / ASP.NET Core Web API
-- Entity Framework Core 10 (SQL Server)
+- Entity Framework Core 10
 - SQL Server 2022
 - Docker
+- C#
 
-## Lancer le projet
+## Prérequis
 
-1. Cloner le dépôt :
+- .NET SDK 10
+- Docker Desktop
+- SQL Server 2022 via Docker
 
-   ```bash
-   git clone https://github.com/bellimam/TP1-FTELMarket.git
-   cd TP1-FTELMarket
-   ```
+## Installation et lancement
 
-2. Restaurer les dépendances :
+### 1. Télécharger le projet
 
-   ```bash
-   dotnet restore
-   ```
+```powershell
+git clone https://github.com/bellimam/TP1-FTELMarket.git
+cd TP1-FTELMarket
+```
 
-3. Démarrer SQL Server avec Docker :
+### 2. Restaurer les dépendances
 
-   ```bash
-   docker run -d --name ftelmarket-sql \
-   -e "ACCEPT_EULA=Y" \
-   -e "MSSQL_SA_PASSWORD=YourStrong!Passw0rd" \
-   -p 1433:1433 \
-   -v ftelmarket-data:/var/opt/mssql \
-   mcr.microsoft.com/mssql/server:2022-latest
-   ```
+```powershell
+dotnet restore
+```
 
-   Remplacer le mot de passe par celui choisi localement.
+### 3. Démarrer SQL Server avec Docker
 
-4. Configurer la chaîne de connexion `DefaultConnection` avec les identifiants du serveur SQL Server.
+```powershell
+docker run -d --name ftelmarket-sql -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=VOTRE_MOT_DE_PASSE_FORT" -p 1433:1433 -v ftelmarket-data:/var/opt/mssql mcr.microsoft.com/mssql/server:2022-latest
+```
 
-5. Appliquer les migrations :
+Remplacer `VOTRE_MOT_DE_PASSE_FORT` par un mot de passe personnel robuste.
 
-   ```bash
-   dotnet ef database update
-   ```
+### 4. Configurer la connexion à SQL Server
 
-6. Lancer l'API :
+Dans PowerShell, définir la variable d'environnement :
 
-   ```bash
-   dotnet run
-   ```
+```powershell
+$env:ConnectionStrings__DefaultConnection = "Server=localhost,1433;Database=FTELMarketDB;User Id=sa;Password=VOTRE_MOT_DE_PASSE_FORT;Encrypt=True;TrustServerCertificate=True"
+```
 
-## Routes
+Utiliser le même mot de passe que celui défini lors de la création du conteneur SQL Server.
 
-| Méthode | URL | Description |
+### 5. Compiler et lancer l'application
+
+```powershell
+dotnet build
+dotnet run
+```
+
+L'application applique les migrations et initialise les données au démarrage si cette configuration est présente dans `Program.cs`.
+
+L'adresse de l'API est affichée dans la console, par exemple :
+
+`http://localhost:5298`
+
+## Endpoints disponibles
+
+| Méthode | Endpoint | Description |
 |---|---|---|
-| GET | `/api/products` | Liste des produits |
+| GET | `/api/products` | Récupérer les produits |
 | POST | `/api/products` | Ajouter un produit |
 | PUT | `/api/products/{id}` | Modifier un produit |
 | DELETE | `/api/products/{id}` | Supprimer un produit |
-| GET | `/api/categories` | Liste des catégories |
+| GET | `/api/categories` | Récupérer les catégories |
 
-## Structure
+## Structure du projet
 
 ```text
-Controllers/   ProductsController
-DATA/          AppDbContext et DbInitializer
-Models/        Product, Category et User
-Migrations/    Migrations Entity Framework Core
-Properties/    Configuration de lancement
-Program.cs     Configuration et démarrage de l'API
+TP1-FTELMarket/
+├── Controllers/
+│   └── ProductsController.cs
+├── DATA/
+│   ├── AppDbContext.cs
+│   └── DbInitializer.cs
+├── Migrations/
+├── Models/
+├── Properties/
+├── .gitignore
+├── FTELMarket.API.csproj
+├── FTELMarket.API.http
+├── Program.cs
+├── appsettings.json
+└── README.md
 ```
 
 ## Choix techniques
 
-- Entity Framework Core avec l'approche Code First et les migrations.
-- Relation 1-N entre User et Product.
-- Relation 1-N entre Category et Product.
-- Prix stocké en `decimal(18,2)` pour garantir la précision des valeurs monétaires.
-- Date de création définie en UTC côté serveur.
-- Données initiales des catégories et d'un utilisateur de démonstration.
+- Approche Code First avec Entity Framework Core.
+- Gestion de la base de données avec les migrations.
+- Relation un-à-plusieurs entre User et Product.
+- Relation un-à-plusieurs entre Category et Product.
+- Prix stocké au format `decimal(18,2)`.
+- Date de création définie en UTC.
+- Initialisation de catégories et d'un utilisateur de démonstration.
